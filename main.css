@@ -11,7 +11,8 @@
     border-radius: 100%;
     color: #FFFFFF;
     display: flex;
-    justify-content: center;
+    flex-direction: column;
+    justify-content: space-evenly;
     align-items: center;
     font-family: sans-serif;
 }
@@ -45,11 +46,14 @@
     justify-content: space-evenly;
     border:5px solid #000000;
 }
-.cell{
-    outline: none;
+.cell.disabled{
+    pointer-events:none:
 }
 .cell:hover{
-    cursor:pointer;
+    cursor: pointer;
+}
+.cell.disabled:hover{
+    cursor:not-allowed;
 }
 
 .cell:nth-child(1){
@@ -58,10 +62,10 @@
     background: #007532;
     border-radius: 100% 0% 0 0;
 }
-.cell:nth-child(1):hover{
+.cell:nth-child(1):not(.disabled):hover{
     box-shadow: 0 0 15px 9px #007532;
 }
-.cell:nth-child(1):active{
+.cell:nth-child(1):not(.disabled):active{
     box-shadow:0 0 15px 9px #007532, inset 0 0 15px 9px #000000a1;
 }
 
@@ -71,10 +75,10 @@
     background: #980000;
     border-radius: 0 100% 0 0;
 }
-.cell:nth-child(2):hover{
+.cell:nth-child(2):not(.disabled):hover{
     box-shadow:0 0 15px 9px #980000;
 }
-.cell:nth-child(2):active{
+.cell:nth-child(2):not(.disabled):active{
     box-shadow:0 0 15px 9px #980000, inset 0 0 15px 9px #000000a1;
 }
 
@@ -86,11 +90,11 @@
     width: 48%;
 }
 
-.cell:nth-child(3):hover{
+.cell:nth-child(3):not(.disabled):hover{
     box-shadow:0 0 15px 9px #8E9131;
 }
 
-.cell:nth-child(3):active{
+.cell:nth-child(3):not(.disabled):active{
     box-shadow:0 0 15px 9px #8E9131, inset 0 0 15px 9px #000000a1;
 }
 
@@ -102,10 +106,20 @@
     width: 48%;
 }
 
-.cell:nth-child(4):hover{
+.cell:nth-child(4):not(.disabled):hover{
     box-shadow:0 0 15px 9px #00356C;
 }
 
-.cell:nth-child(4):active{
+.cell:nth-child(4):not(.disabled):active{
     box-shadow:0 0 15px 9px #00356C, inset 0 0 15px 9px #000000a1;
+}
+
+
+.gameBtn{
+    background: #ffffff;
+    border-radius: 100%;
+    font-size: 19px;
+    padding: 0 2px;
+    outline: none;
+    cursor: pointer;
 }
