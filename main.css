@@ -1,7 +1,7 @@
 .centerDiv{
     position: absolute;
-    height: 80px;
-    width: 80px;
+    height: 160px;
+    width: 160px;
     left: 0;
     right: 0;
     margin: auto;
@@ -16,7 +16,7 @@
     font-family: sans-serif;
 }
 .outerDiv{
-    position: absolute;
+    /*position: absolute;
     height: 195px;
     width: 195px;
     left: 0;
@@ -27,12 +27,16 @@
     border: 5px solid #000000;
     border-radius: 100%;
     pointer-events: none;
-    display: none;
+    display: none;*/
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 #parent{
-    height: 200px;
-    width: 200px;
+    height: 400px;
+    width: 400px;
     border-radius: 100%;
     background: #000000;
     display: flex;
@@ -40,6 +44,12 @@
     align-items: center;
     justify-content: space-evenly;
     border:5px solid #000000;
+}
+.cell{
+    outline: none;
+}
+.cell:hover{
+    cursor:pointer;
 }
 
 .cell:nth-child(1){
@@ -49,7 +59,10 @@
     border-radius: 100% 0% 0 0;
 }
 .cell:nth-child(1):hover{
-    box-shadow:inset 0 0 5px 2px #007532, 0 0 10px 4px #007532;
+    box-shadow: 0 0 15px 9px #007532;
+}
+.cell:nth-child(1):active{
+    box-shadow:0 0 15px 9px #007532, inset 0 0 15px 9px #000000a1;
 }
 
 .cell:nth-child(2){
@@ -59,7 +72,10 @@
     border-radius: 0 100% 0 0;
 }
 .cell:nth-child(2):hover{
-    box-shadow:inset 0 0 5px 2px #980000, 0 0 10px 4px #980000;
+    box-shadow:0 0 15px 9px #980000;
+}
+.cell:nth-child(2):active{
+    box-shadow:0 0 15px 9px #980000, inset 0 0 15px 9px #000000a1;
 }
 
 
@@ -71,8 +87,13 @@
 }
 
 .cell:nth-child(3):hover{
-    box-shadow:inset 0 0 5px 2px #8E9131, 0 0 10px 4px #8E9131;
+    box-shadow:0 0 15px 9px #8E9131;
 }
+
+.cell:nth-child(3):active{
+    box-shadow:0 0 15px 9px #8E9131, inset 0 0 15px 9px #000000a1;
+}
+
 
 .cell:nth-child(4){
     background: #00356C;
@@ -81,10 +102,10 @@
     width: 48%;
 }
 
-/*.cell:nth-child(4):hover{
-    box-shadow:inset 0 0 5px 2px #00356C, 0 0 10px 4px #00356C;
-}*/
+.cell:nth-child(4):hover{
+    box-shadow:0 0 15px 9px #00356C;
+}
 
-.cell:hover{
-    box-shadow:inset 0 0 5px 2px #ffffff, 0 0 5px 2px #ffffff;
+.cell:nth-child(4):active{
+    box-shadow:0 0 15px 9px #00356C, inset 0 0 15px 9px #000000a1;
 }
