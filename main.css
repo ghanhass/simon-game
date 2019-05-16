@@ -44,7 +44,7 @@
     flex-wrap: wrap;
     align-items: center;
     justify-content: space-evenly;
-    border:5px solid #000000;
+    border: 5px solid #000000;
 }
 .cell.disabled{
     pointer-events:none:
@@ -62,10 +62,10 @@
     background: #007532;
     border-radius: 100% 0% 0 0;
 }
-.cell:nth-child(1):not(.disabled):hover{
+.cell:nth-child(1):not(.disabled):not(.auto-mode):hover{
     box-shadow: 0 0 15px 9px #007532;
 }
-.cell:nth-child(1):not(.disabled):active{
+.cell:nth-child(1):not(.disabled):not(.auto-mode):active{
     box-shadow:0 0 15px 9px #007532, inset 0 0 15px 9px #000000a1;
 }
 
@@ -75,10 +75,10 @@
     background: #980000;
     border-radius: 0 100% 0 0;
 }
-.cell:nth-child(2):not(.disabled):hover{
+.cell:nth-child(2):not(.disabled):not(.auto-mode):hover{
     box-shadow:0 0 15px 9px #980000;
 }
-.cell:nth-child(2):not(.disabled):active{
+.cell:nth-child(2):not(.disabled):not(.auto-mode):active{
     box-shadow:0 0 15px 9px #980000, inset 0 0 15px 9px #000000a1;
 }
 
@@ -90,11 +90,11 @@
     width: 48%;
 }
 
-.cell:nth-child(3):not(.disabled):hover{
+.cell:nth-child(3):not(.disabled):not(.auto-mode):hover{
     box-shadow:0 0 15px 9px #8E9131;
 }
 
-.cell:nth-child(3):not(.disabled):active{
+.cell:nth-child(3):not(.disabled):not(.auto-mode):active{
     box-shadow:0 0 15px 9px #8E9131, inset 0 0 15px 9px #000000a1;
 }
 
@@ -106,11 +106,11 @@
     width: 48%;
 }
 
-.cell:nth-child(4):not(.disabled):hover{
+.cell:nth-child(4):not(.disabled):not(.auto-mode):hover{
     box-shadow:0 0 15px 9px #00356C;
 }
 
-.cell:nth-child(4):not(.disabled):active{
+.cell:nth-child(4):not(.disabled):not(.auto-mode):active{
     box-shadow:0 0 15px 9px #00356C, inset 0 0 15px 9px #000000a1;
 }
 
@@ -122,4 +122,84 @@
     padding: 0 2px;
     outline: none;
     cursor: pointer;
+}
+
+.game-buttons{
+    display: flex;
+    align-items: center;
+    width: 118px;
+    justify-content: space-between;
+}
+
+.game-buttons {}
+
+@media screen and (min-width: 430px){
+    .game-buttons{
+        width: 118px;
+    }
+    .gameBtn{
+        font-size:20px;
+    }
+}
+@media screen and (max-width: 429px){
+    .centerDiv{
+        position: absolute;
+        height: 140px;
+        width: 140px;
+    }
+    #parent{
+        height: 380px;
+        width: 380px;
+
+    }
+    .game-buttons{
+        width: 104px;
+    }
+    .gameBtn{
+        font-size:18px;
+    }
+}
+@media screen and (max-width: 409px){
+    .centerDiv{
+        position: absolute;
+        height: 120px;
+        width: 120px;
+    }
+    #parent{
+        height: 360px;
+        width: 360px;
+
+    }
+    .game-title{
+        font-size: 15px;
+    }
+    .game-scores{
+         font-size: 15px;
+    }
+    
+}
+@media screen and (max-width: 389px){
+    .centerDiv{
+        position: absolute;
+        height: 120px;
+        width: 120px;
+    }
+    #parent{
+        height: 340px;
+        width: 340px;
+
+    }
+    .game-title{
+        font-size: 13px;
+    }
+    .game-scores{
+         font-size: 13px;
+    }
+    .game-buttons{
+        width: 90px;
+    }
+    .gameBtn{
+        font-size:16px;
+    }
+    
 }
