@@ -17,18 +17,6 @@
     font-family: sans-serif;
 }
 .outerDiv{
-    /*position: absolute;
-    height: 195px;
-    width: 195px;
-    left: 0;
-    right: 0;
-    margin: auto;
-    top: 0;
-    bottom: 0;
-    border: 5px solid #000000;
-    border-radius: 100%;
-    pointer-events: none;
-    display: none;*/
     position: relative;
     display: flex;
     align-items: center;
@@ -38,6 +26,7 @@
 #parent{
     height: 400px;
     width: 400px;
+    min-width:270px;
     border-radius: 100%;
     background: #000000;
     display: flex;
@@ -59,59 +48,59 @@
 .cell:nth-child(1){
     height: 49%;
     width: 48%;
-    background: #007532;
+    background: #06D6A0;
     border-radius: 100% 0% 0 0;
 }
 .cell:nth-child(1):not(.disabled):not(.auto-mode):hover{
-    box-shadow: 0 0 15px 9px #007532;
+    box-shadow: 0 0 15px 9px #06D6A0;
 }
 .cell:nth-child(1):not(.disabled):not(.auto-mode):active{
-    box-shadow:0 0 15px 9px #007532, inset 0 0 15px 9px #000000a1;
+    box-shadow:0 0 15px 9px #06D6A0, inset 0 0 15px 9px #000000a1;
 }
 
 .cell:nth-child(2){
     height: 49%;
     width: 48%;
-    background: #980000;
+    background: #EF476F;
     border-radius: 0 100% 0 0;
 }
 .cell:nth-child(2):not(.disabled):not(.auto-mode):hover{
-    box-shadow:0 0 15px 9px #980000;
+    box-shadow:0 0 15px 9px #EF476F;
 }
 .cell:nth-child(2):not(.disabled):not(.auto-mode):active{
-    box-shadow:0 0 15px 9px #980000, inset 0 0 15px 9px #000000a1;
+    box-shadow:0 0 15px 9px #EF476F, inset 0 0 15px 9px #000000a1;
 }
 
 
 .cell:nth-child(3){
-    background: #8E9131;
+    background: #FFD166;
     border-radius: 0 0 0 100%;
     height: 48%;
     width: 48%;
 }
 
 .cell:nth-child(3):not(.disabled):not(.auto-mode):hover{
-    box-shadow:0 0 15px 9px #8E9131;
+    box-shadow:0 0 15px 9px #FFD166;
 }
 
 .cell:nth-child(3):not(.disabled):not(.auto-mode):active{
-    box-shadow:0 0 15px 9px #8E9131, inset 0 0 15px 9px #000000a1;
+    box-shadow:0 0 15px 9px #FFD166, inset 0 0 15px 9px #000000a1;
 }
 
 
 .cell:nth-child(4){
-    background: #00356C;
+    background: #26547C;
     border-radius: 0 0 100% 0;
     height: 48%;
     width: 48%;
 }
 
 .cell:nth-child(4):not(.disabled):not(.auto-mode):hover{
-    box-shadow:0 0 15px 9px #00356C;
+    box-shadow:0 0 15px 9px #26547C;
 }
 
 .cell:nth-child(4):not(.disabled):not(.auto-mode):active{
-    box-shadow:0 0 15px 9px #00356C, inset 0 0 15px 9px #000000a1;
+    box-shadow:0 0 15px 9px #26547C, inset 0 0 15px 9px #000000a1;
 }
 
 
@@ -197,6 +186,53 @@
     }
     .game-buttons{
         width: 90px;
+    }
+    .gameBtn{
+        font-size:16px;
+    }
+    
+}
+
+@media screen and (max-width: 369px){
+    .centerDiv{
+        position: absolute;
+        height: 90px;
+        width: 90px;
+    }
+    #parent{
+        height: 310px;
+        width: 310px;
+
+    }
+    .game-title{
+        font-size: 13px;
+    }
+    .game-scores{
+         font-size: 13px;
+    }
+    .game-buttons{
+        width: 90px;
+    }
+    .gameBtn{
+        font-size:16px;
+    }
+    
+}
+@media screen and (max-width: 349px){
+
+    #parent{
+        height: 280px;
+        width: 280px;
+
+    }
+    .game-title{
+        font-size: 13px;
+    }
+    .game-scores{
+         font-size: 13px;
+    }
+    .game-buttons{
+        width: 75x;
     }
     .gameBtn{
         font-size:16px;
