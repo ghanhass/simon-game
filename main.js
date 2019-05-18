@@ -4,7 +4,7 @@ var gameMediaElements = []
 var gameStage = 1;
 var playBtn;
 var score = 0;
-var topScore = localStorage.getItem("hassenSimonTopScore");
+var topScore = window.localStorage.getItem("hassenSimonTopScore");
 
 /** Change game title text configurationally
  * 
