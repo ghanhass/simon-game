@@ -1,3 +1,6 @@
+audio{
+    display:none !important;
+}
 .centerDiv{
     position: absolute;
     height: 160px;
@@ -34,10 +37,10 @@
     align-items: center;
     justify-content: space-evenly;
     border: 5px solid #000000;
-    box-shadow:2px 2px 0 4px #000000;
+    /*box-shadow:2px 2px 0 4px #000000;*/
 }
 .cell.disabled{
-    pointer-events:none:
+    pointer-events:none;
 }
 .cell:hover{
     cursor: pointer;
@@ -52,10 +55,12 @@
     background: #06D6A0;
     border-radius: 100% 0% 0 0;
 }
-.cell:nth-child(1):not(.disabled):not(.auto-mode):hover{
+.cell:nth-child(1):not(.disabled):not(.active):hover{
     box-shadow: 0 0 15px 9px #06D6A0;
 }
-.cell:nth-child(1):not(.disabled):not(.auto-mode):active{
+.cell:nth-child(1):not(.disabled):not(.active):active,
+.cell:nth-child(1).active
+{
     box-shadow: 0 0 15px 9px #06D6A0, inset 0 0 4px 4px #06D6A0, inset 0 0 12px 6px #000000a1;
 }
 
@@ -65,10 +70,11 @@
     background: #EF476F;
     border-radius: 0 100% 0 0;
 }
-.cell:nth-child(2):not(.disabled):not(.auto-mode):hover{
+.cell:nth-child(2):not(.disabled):not(.active):hover{
     box-shadow:0 0 15px 9px #EF476F;
 }
-.cell:nth-child(2):not(.disabled):not(.auto-mode):active{
+.cell:nth-child(2):not(.disabled):not(.active):active,
+.cell:nth-child(2).active{
     box-shadow: 0 0 15px 9px #EF476F, inset 0 0 4px 4px #EF476F, inset 0 0 12px 6px #000000a1;
 }
 
@@ -80,11 +86,12 @@
     width: 48%;
 }
 
-.cell:nth-child(3):not(.disabled):not(.auto-mode):hover{
+.cell:nth-child(3):not(.disabled):not(.active):hover{
     box-shadow:0 0 15px 9px #FFD166;
 }
 
-.cell:nth-child(3):not(.disabled):not(.auto-mode):active{
+.cell:nth-child(3):not(.disabled):not(.active):active,
+.cell:nth-child(3).active{
     box-shadow: 0 0 15px 9px #FFD166, inset 0 0 4px 4px #FFD166, inset 0 0 12px 6px #000000a1;
 }
 
@@ -96,11 +103,12 @@
     width: 48%;
 }
 
-.cell:nth-child(4):not(.disabled):not(.auto-mode):hover{
+.cell:nth-child(4):not(.disabled):not(.active):hover{
     box-shadow:0 0 15px 9px #26547C;
 }
 
-.cell:nth-child(4):not(.disabled):not(.auto-mode):active{
+.cell:nth-child(4):not(.disabled):not(.active):active,
+.cell:nth-child(4).active{
     box-shadow: 0 0 15px 9px #26547C, inset 0 0 4px 4px #26547C, inset 0 0 12px 6px #000000a1;
 }
 
@@ -118,7 +126,7 @@
     display: flex;
     align-items: center;
     width: 118px;
-    justify-content: space-between;
+    justify-content: center;
 }
 
 .game-buttons {}
@@ -212,7 +220,7 @@
          font-size: 13px;
     }
     .game-buttons{
-        width: 90px;
+        width: 70px;
     }
     .gameBtn{
         font-size:16px;
