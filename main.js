@@ -69,7 +69,7 @@ function gameAI(gameDOMCells, arr){
             gameDOMCells.forEach(element => {
                 element.classList.remove("disabled");
             });
-            playBtn.disabled = false;
+            //playBtn.disabled = false;    //nope :p
         } 
         }
         ]);
