@@ -3,6 +3,8 @@ var gameDOMCells = []
 var gameMediaElements = []
 var gameStage = 1;
 var playBtn;
+var score = 0;
+var topScore = localStorage.getItem("hassenSimonTopScore");
 
 /** Change game title text configurationally
  * 
@@ -66,14 +68,18 @@ function gameAI(gameDOMCells, arr){
         gameTitleMessages([
         {text:'Your turn!', fontWeight: 'bold', delay: 1000},
         {text:'Simon', fontWeight: '', callback: ()=>{
-            gameDOMCells.forEach(element => {
-                element.classList.remove("disabled");
-            });
+            userGamePlay(gameDOMCells)
             //playBtn.disabled = false;    //nope :p
-        } 
+        } , callbackParams: [gameDOMCells]
         }
         ]);
     }
+}
+
+function userGamePlay(gameDOMCells){
+    gameDOMCells.forEach(element => {
+        element.classList.remove("disabled");
+    });
 }
 
 /**
@@ -106,6 +112,8 @@ document.addEventListener("DOMContentLoaded", function(){
 
     playBtn = document.querySelector(".gameBtn.playBtn");
     playBtn.addEventListener("click", playBtnEventHandler);
+
+    
     //var pauseBtn = document.querySelector(".gameBtn.pauseBtn");
     //var restartBtn = document.querySelector(".gameBtn.restartBtn");
 });
