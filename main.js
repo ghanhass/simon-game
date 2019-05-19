@@ -61,15 +61,24 @@ function getTopScore(){
         return parseInt(topScore);
     }
     localStorage.setItem("hassenSimontopScore", 0);
-    return 0
+    return 0;
 }
 function setTopScore(score = undefined){
+    let storedTopScore = localStorage.getItem("hassenSimontopScore");
     if(score){
         localStorage.setItem("hassenSimontopScore", score);
         gameData.gameDOMTopScore.textContent = score;
+        gameData.topScore = score;
     }
     else{
-        gameData.gameDOMTopScore.textContent = localStorage.getItem("hassenSimontopScore");
+        if(storedTopScore){
+            gameData.topScore = parseInt(storedTopScore);
+            gameData.gameDOMTopScore.textContent = storedTopScore;
+        }
+        else{
+            localStorage.setItem("hassenSimontopScore", 0);
+            gameData.gameDOMTopScore.textContent = 0;
+        }
     }
 }
 
@@ -103,6 +112,9 @@ function gameTitleMessages(messagesArray){
  * @param gameDOMCells: Array of DOM elelements corresponding to game cells
  */
 function ready(gameDOMCells){
+    if(!gameData.gameAICells.length){//reset score after a gameover call
+        setScore(0);
+    }
     gameData.gameStage++;
     gameData.gameAICells.push(Math.floor(Math.random() * 4) + 1);
     gameDOMCells.forEach(element => {
@@ -173,7 +185,6 @@ function gameOver(){
         element.classList.add("disabled");
         console.log("gameOver !");
         gameData.gameAICells = [];
-        setScore(0);
     });
     }
     }]);
