@@ -4,9 +4,15 @@ var gameData = {
     gameRemainingCellsCount: 0,
     gameMediaElements: [],
     gameStage: 0,
+
     playBtn: undefined,
+
     score: 0,
-    topScore: window.localStorage.getItem("hassenSimonTopScore") || 0
+    topScore: getTopScore(),
+    gameDOMScore: undefined,
+    gameDOMTopScore: undefined,
+
+    gameDOMTitle: undefined
 }
 
 var miscellaneous
@@ -25,17 +31,47 @@ var gameEventHandlers = {
         console.log("current cellId = ", cellId);
         console.log("right cellId = ", rightCellId);
         console.log("current cell count: ", gameData.gameRemainingCellsCount, " / ", gameData.gameAICells.length);
-        playAudio(cellId);
+        
         if(cellId != rightCellId){
             gameOver();
         }
-        else if(gameData.gameRemainingCellsCount >= gameData.gameAICells.length ){//stage complete
-            gameNextStage();
+        else{
+            playAudio(cellId);
+            if(gameData.gameRemainingCellsCount >= gameData.gameAICells.length ){//stage complete
+                setScore(gameData.score + 1);
+                gameNextStage();
+            }
         }
+
+        
         //console.log('cell: ', event.target);
     }
 }
 
+function setScore(score){
+    gameData.score = score;
+    gameData.gameDOMScore.textContent = score;
+    if(gameData.topScore < gameData.score){
+        setTopScore(score)
+    }
+}
+function getTopScore(){
+    let topScore = localStorage.getItem("hassenSimontopScore");
+    if(topScore){
+        return parseInt(topScore);
+    }
+    localStorage.setItem("hassenSimontopScore", 0);
+    return 0
+}
+function setTopScore(score = undefined){
+    if(score){
+        localStorage.setItem("hassenSimontopScore", score);
+        gameData.gameDOMTopScore.textContent = score;
+    }
+    else{
+        gameData.gameDOMTopScore.textContent = localStorage.getItem("hassenSimontopScore");
+    }
+}
 
 /** Change game title text configurationally
  * 
@@ -44,8 +80,8 @@ var gameEventHandlers = {
 function gameTitleMessages(messagesArray){
     if(messagesArray.length){
 
-        document.querySelector(".game-title").style.fontWeight = messagesArray[0].fontWeight;
-        document.querySelector(".game-title").textContent = messagesArray[0].text;
+        gameData.gameDOMTitle.style.fontWeight = messagesArray[0].fontWeight;
+        gameData.gameDOMTitle.textContent = messagesArray[0].text;
         if(messagesArray[0].callback){
             if(messagesArray[0].callbackParams){
                 messagesArray[0].callback(...messagesArray[0].callbackParams);
@@ -100,16 +136,16 @@ function gameAI(gameDOMCells, cellsArray){
         gameTitleMessages([
         {text:'Your turn!', fontWeight: 'bold',callback: ()=>{
             userGamePlay(gameDOMCells)
-            gameData.playBtn.disabled = false;    //nope :p
+            gameData.playBtn.disabled = true; //disable play button
         } , callbackParams: [gameDOMCells]},
         ]);
     }
 }
 
 function userGamePlay(gameDOMCells){
-    gameData.gameRemainingCellsCount = 0; // reset
+    gameData.gameRemainingCellsCount = 0; // reset counter
     gameDOMCells.forEach(element => {
-        element.classList.remove("disabled");
+        element.classList.remove("disabled"); //enable cells
         element.addEventListener("click", gameEventHandlers.gameCellClickEventHandler);
     });
 
@@ -121,14 +157,26 @@ function gameNextStage(){
         element.classList.add("disabled");
     });
     console.log("gameNextStage !")
+    gameTitleMessages([{text: "Good job!", fontWeight: 'bold', delay: 500, callback: ()=>{
+        gameData.playBtn.disabled = false; //enable play button
+    }
+    }])
 }
 
 function gameOver(){
-    gameData.playBtn.removeEventListener("click", gameEventHandlers.gameCellClickEventHandler);
-    gameData.gameDOMCells.forEach(element => {
+    playAudio(5);
+    
+    gameTitleMessages([{text: "Game Over!", fontWeight: "bold", delay: 500, callback: ()=>{
+        gameData.playBtn.disabled = false; //enable play button
+        gameData.playBtn.removeEventListener("click", gameEventHandlers.gameCellClickEventHandler);
+        gameData.gameDOMCells.forEach(element => {
         element.classList.add("disabled");
+        console.log("gameOver !");
+        gameData.gameAICells = [];
+        setScore(0);
     });
-    console.log("gameOver !")
+    }
+    }]);
 }
 
 
@@ -139,13 +187,13 @@ function gameOver(){
 function playAudio(id){
     gameData.gameMediaElements[id - 1].cloneNode(true).play();
 }
-///////////////////////////
 
-document.addEventListener("DOMContentLoaded", function(){
+function initGame(){
     gameData.gameMediaElements.push(document.querySelector("#simon-sound-1"));
     gameData.gameMediaElements.push(document.querySelector("#simon-sound-2"));
     gameData.gameMediaElements.push(document.querySelector("#simon-sound-3"));
     gameData.gameMediaElements.push(document.querySelector("#simon-sound-4"));
+    gameData.gameMediaElements.push(document.querySelector("#simon-sound-X"));
 
     gameData.gameDOMCells.push(document.querySelector(".cell[data-cell-id='1']"));
     gameData.gameDOMCells.push(document.querySelector(".cell[data-cell-id='2']"));
@@ -155,6 +203,18 @@ document.addEventListener("DOMContentLoaded", function(){
     gameData.playBtn = document.querySelector(".gameBtn.playBtn");
     gameData.playBtn.addEventListener("click", gameEventHandlers.playBtnEventHandler);
 
+    gameData.gameDOMScore = document.querySelector("#score");
+    gameData.gameDOMTopScore = document.querySelector("#top-score");
+    gameData.gameDOMTitle = document.querySelector(".game-title");
+    setScore(0);
+    setTopScore();
+}
+
+///////////////////////////
+
+document.addEventListener("DOMContentLoaded", function(){
+    
+    initGame();
     
     //var pauseBtn = document.querySelector(".gameBtn.pauseBtn");
     //var restartBtn = document.querySelector(".gameBtn.restartBtn");
