@@ -28,9 +28,9 @@ var gameEventHandlers = {
         gameData.gameRemainingCellsCount++;
         let cellId = parseInt(event.target.dataset.cellId);
         let rightCellId = gameData.gameAICells[gameData.gameRemainingCellsCount - 1];
-        console.log("current cellId = ", cellId);
-        console.log("right cellId = ", rightCellId);
-        console.log("current cell count: ", gameData.gameRemainingCellsCount, " / ", gameData.gameAICells.length);
+        //console.log("current cellId = ", cellId);
+        //console.log("right cellId = ", rightCellId);
+        //console.log("current cell count: ", gameData.gameRemainingCellsCount, " / ", gameData.gameAICells.length);
         
         if(cellId != rightCellId){
             gameOver();
