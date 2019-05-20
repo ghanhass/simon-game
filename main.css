@@ -55,9 +55,9 @@ audio{
     background: #06D6A0;
     border-radius: 100% 0% 0 0;
 }
-.cell:nth-child(1):not(.disabled):not(.active):hover{
+/*.cell:nth-child(1):not(.disabled):not(.active):hover{
     box-shadow: 0 0 15px 9px #06D6A0;
-}
+}*/
 .cell:nth-child(1):not(.disabled):not(.active):active,
 .cell:nth-child(1).active
 {
@@ -70,9 +70,9 @@ audio{
     background: #EF476F;
     border-radius: 0 100% 0 0;
 }
-.cell:nth-child(2):not(.disabled):not(.active):hover{
+/*.cell:nth-child(2):not(.disabled):not(.active):hover{
     box-shadow:0 0 15px 9px #EF476F;
-}
+}*/
 .cell:nth-child(2):not(.disabled):not(.active):active,
 .cell:nth-child(2).active{
     box-shadow: 0 0 15px 9px #EF476F, inset 0 0 4px 4px #EF476F, inset 0 0 12px 6px #000000a1;
@@ -86,9 +86,9 @@ audio{
     width: 48%;
 }
 
-.cell:nth-child(3):not(.disabled):not(.active):hover{
+/*.cell:nth-child(3):not(.disabled):not(.active):hover{
     box-shadow:0 0 15px 9px #FFD166;
-}
+}*/
 
 .cell:nth-child(3):not(.disabled):not(.active):active,
 .cell:nth-child(3).active{
@@ -103,9 +103,9 @@ audio{
     width: 48%;
 }
 
-.cell:nth-child(4):not(.disabled):not(.active):hover{
+/*.cell:nth-child(4):not(.disabled):not(.active):hover{
     box-shadow:0 0 15px 9px #26547C;
-}
+}*/
 
 .cell:nth-child(4):not(.disabled):not(.active):active,
 .cell:nth-child(4).active{
