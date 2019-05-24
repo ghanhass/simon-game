@@ -12,7 +12,9 @@ var gameData = {
     gameDOMScore: undefined,
     gameDOMTopScore: undefined,
 
-    gameDOMTitle: undefined
+    gameDOMTitle: undefined,
+    gameDiv: undefined,
+    gameScoresDiv: undefined
 }
 
 var miscellaneous
@@ -177,17 +179,20 @@ function gameNextStage(){
 
 function gameOver(){
     playAudio(5);
-    
-    gameTitleMessages([{text: "Game Over!", fontWeight: "bold", delay: 500, callback: ()=>{
-        gameData.playBtn.disabled = false; //enable play button
-        gameData.playBtn.removeEventListener("click", gameEventHandlers.gameCellClickEventHandler);
-        gameData.gameDOMCells.forEach(element => {
-        element.classList.add("disabled");
-        console.log("gameOver !");
-        gameData.gameAICells = [];
-    });
-    }
-    }]);
+    gameTitleMessages([{text: "Game Over!", fontWeight: "bold", delay: 700, callback: ()=>{
+            gameData.playBtn.disabled = false; //enable play button
+            gameData.playBtn.removeEventListener("click", gameEventHandlers.gameCellClickEventHandler);
+            gameData.gameDOMCells.forEach(element => {
+                element.classList.add("disabled");
+                console.log("gameOver !");
+                gameData.gameAICells = [];
+            });
+        }},
+        {text: gameData.gameDOMTitle.textContent, fontWeight: "", delay: 2000, callback: ()=>{
+            scoresBoard();
+        }
+        }
+    ]);
 }
 
 
@@ -217,10 +222,19 @@ function initGame(){
     gameData.gameDOMScore = document.querySelector("#score");
     gameData.gameDOMTopScore = document.querySelector("#top-score");
     gameData.gameDOMTitle = document.querySelector(".game-title");
+    gameData.gameDiv = document.querySelector(".outerGameDiv");
+    gameData.gameScoresDiv = document.querySelector(".outerScoresDiv");
     setScore(0);
     setTopScore();
 }
 
+function scoresBoard(){
+    document.body.className = "animateGame";
+    gameData.gameDiv.classList.add("isHidden");
+    gameData.gameDiv.classList.remove("isShown");
+    gameData.gameScoresDiv.classList.add("isShown");
+    gameData.gameScoresDiv.classList.remove("isHidden");
+}
 ///////////////////////////
 
 document.addEventListener("DOMContentLoaded", function(){
