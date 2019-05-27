@@ -14,7 +14,8 @@ var gameData = {
 
     gameDOMTitle: undefined,
     gameDiv: undefined,
-    gameScoresDiv: undefined
+    gameScoresDiv: undefined,
+    exitScoresBoardBtn: undefined
 }
 
 var miscellaneous
@@ -25,6 +26,9 @@ var gameEventHandlers = {
     */
     playBtnEventHandler: function(event){
         ready(gameData.gameDOMCells);
+    },
+    exitScoresBoardBtnEventHandler: function(event){
+        GameBoard()
     },
     gameCellClickEventHandler: function(event){
         gameData.gameRemainingCellsCount++;
@@ -47,7 +51,39 @@ var gameEventHandlers = {
 
         
         //console.log('cell: ', event.target);
-    }
+    },
+    animationStartHandler: function(event){
+        console.log("animationStartHandler ", event);
+        switch(event.animationName){
+            case "rotatesimonhide": //whatever
+            break;    
+        }
+    },
+    animationEndHandler: function(event){
+        console.log("animationEndHandler ", event);
+        switch(event.animationName){
+            case "rotatesimonhide": document.body.classList.remove("animateShowScores");
+            break;   
+
+            case "rotatesimonshow": document.body.classList.remove("animateShowGame");
+            break; 
+        }
+    },
+    /*
+    showScoresAnimationStartEventHandler: function(event){
+        console.log('inside  showScoresAnimationStartEventHandler!');
+    },
+    showScoresAnimationEndEventHandler: function(event){
+        console.log('inside  showScoresAnimationEndEventHandler!');
+        document.body.classList.remove("animateShowScores");
+    },
+    showGameAnimationStartEventHandler: function(event){
+        console.log('inside  showGameAnimationStartEventHandler!');
+    },
+    showGameAnimationEndEventHandler: function(event){
+        console.log('inside  showGameAnimationEndEventHandler!');
+        document.body.classList.remove("animateShowGame");
+    },*/
 }
 
 function setScore(score){
@@ -66,7 +102,7 @@ function getTopScore(){
     return 0;
 }
 function setTopScore(score = undefined){
-    let storedTopScore = localStorage.getItem("hassenSimontopScore");
+    let storedTopScore = localStorage.getItem("hassenSimontopScore");// to be restorable from DB in the future
     if(score){
         localStorage.setItem("hassenSimontopScore", score);
         gameData.gameDOMTopScore.textContent = score;
@@ -224,16 +260,30 @@ function initGame(){
     gameData.gameDOMTitle = document.querySelector(".game-title");
     gameData.gameDiv = document.querySelector(".outerGameDiv");
     gameData.gameScoresDiv = document.querySelector(".outerScoresDiv");
+    gameData.exitScoresBoardBtn = document.querySelector("#exitScoresBoard");
+
+    gameData.gameDiv.addEventListener("animationstart", gameEventHandlers.animationStartHandler);
+    gameData.gameDiv.addEventListener("animationend", gameEventHandlers.animationEndHandler);
+
+    gameData.exitScoresBoardBtn.addEventListener("click", gameEventHandlers.exitScoresBoardBtnEventHandler);
     setScore(0);
     setTopScore();
 }
 
 function scoresBoard(){
-    document.body.className = "animateGame";
+    document.body.classList.add("animateShowScores");
     gameData.gameDiv.classList.add("isHidden");
     gameData.gameDiv.classList.remove("isShown");
     gameData.gameScoresDiv.classList.add("isShown");
     gameData.gameScoresDiv.classList.remove("isHidden");
+}
+
+function GameBoard(){
+    document.body.classList.add("animateShowGame");
+    gameData.gameDiv.classList.add("isShown");
+    gameData.gameDiv.classList.remove("isHidden");
+    gameData.gameScoresDiv.classList.add("isHidden");
+    gameData.gameScoresDiv.classList.remove("isShown");
 }
 ///////////////////////////
 
