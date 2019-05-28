@@ -97,6 +97,10 @@ body.animateShowGame .outerScoresDiv{
     flex-direction: column;
     justify-content: space-around;
 }
+.cell{
+    border: none;
+    outline:none;
+}
 .cell.disabled{
     pointer-events:none;
 }
