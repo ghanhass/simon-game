@@ -199,15 +199,54 @@ body.animateShowGame .outerScoresDiv{
 }
 @media screen and (max-width: 429px){
     .centerDiv{
-        position: absolute;
         height: 140px;
         width: 140px;
     }
-    #parent{
+    #parentGame, #parentScores{
         height: 380px;
         width: 380px;
 
     }
+
+    
+    #parentScores  .formContainer{
+        height: auto;
+        width:260px;
+    }
+    #usernameInput{
+        width: 160px;
+    }
+    
+    #parentScores .scoresTableContainer{
+        height: 180px;
+    }
+
+    #parentScores .scoresBoardFooter{
+        height: 24px;
+    }
+
+    #parentScores #exitScoresBoard{
+        width:35px;
+    }
+    
+    .scoresSpacer {
+        /*height: 23px;*/
+    }
+
+    #submitUsernameInput{
+        width: 22px;
+        padding: 0.9px 2px;
+    }
+   #parentScores #exitScoresBoard{
+        width: 30px;
+        padding: 0.9px 2px;
+    }
+    .game-title,#parentScores{
+        font-size: 13px;
+    }
+
+
+
     .game-buttons{
         width: 104px;
     }
@@ -217,11 +256,10 @@ body.animateShowGame .outerScoresDiv{
 }
 @media screen and (max-width: 409px){
     .centerDiv{
-        position: absolute;
         height: 120px;
         width: 120px;
     }
-    #parent{
+    #parentGame, #parentScores{
         height: 360px;
         width: 360px;
 
@@ -236,15 +274,55 @@ body.animateShowGame .outerScoresDiv{
 }
 @media screen and (max-width: 389px){
     .centerDiv{
-        position: absolute;
         height: 120px;
         width: 120px;
     }
-    #parent{
+    #parentGame, #parentScores{
         height: 340px;
         width: 340px;
 
     }
+
+
+    
+    #parentScores  .formContainer{
+        height: auto;
+        width:260px;
+    }
+    #usernameInput{
+        width: 160px;
+    }
+    
+    #parentScores .scoresTableContainer{
+        height: 180px;
+    }
+
+    #parentScores .scoresBoardFooter{
+        height: 24px;
+    }
+
+    #parentScores #exitScoresBoard{
+        width:35px;
+    }
+    
+    .scoresSpacer {
+        /*height: 23px;*/
+    }
+
+    #submitUsernameInput{
+        width: 22px;
+        padding: 0.9px 2px;
+    }
+   #parentScores #exitScoresBoard{
+        width: 30px;
+        padding: 0.9px 2px;
+    }
+    .game-title,#parentScores{
+        font-size: 13px;
+    }
+
+
+
     .game-title{
         font-size: 13px;
     }
@@ -262,15 +340,50 @@ body.animateShowGame .outerScoresDiv{
 
 @media screen and (max-width: 369px){
     .centerDiv{
-        position: absolute;
         height: 90px;
         width: 90px;
     }
-    #parent{
+    #parentGame, #parentScores{
         height: 310px;
         width: 310px;
 
     }
+
+
+    #parentScores  .formContainer{
+        width:230px;
+    }
+    #usernameInput{
+        width: 120px;
+    }
+    
+    #parentScores .scoresTableContainer{
+        height: 160px;
+    }
+
+    #parentScores .scoresBoardFooter{
+        height: 20px;
+    }
+    
+    .scoresSpacer {
+        /*height: 23px;*/
+    }
+
+    #submitUsernameInput{
+        width: 22px;
+        padding: 0.9px 2px;
+    }
+    #parentScores #exitScoresBoard{
+        width: 30px;
+        padding: 0.9px 2px;
+    }
+
+    .game-title,#parentScores{
+        font-size: 13px;
+    }
+
+
+
     .game-title{
         font-size: 13px;
     }
@@ -287,14 +400,43 @@ body.animateShowGame .outerScoresDiv{
 }
 @media screen and (max-width: 349px){
 
-    #parent{
+    #parentGame, #parentScores{
         height: 280px;
         width: 280px;
-
     }
-    .game-title{
+
+    #parentScores  .formContainer{
+        height: auto;
+        width:200px;
+    }
+    #usernameInput{
+        width: 120px;
+    }
+    
+    #parentScores .scoresTableContainer{
+        height: 150px;
+    }
+
+    #parentScores .scoresBoardFooter{
+        height: 20px;
+    }
+    
+    .scoresSpacer {
+        /*height: 23px;*/
+    }
+
+    #submitUsernameInput{
+        width: 22px;
+        padding: 0.9px 2px;
+    }
+    #parentScores #exitScoresBoard{
+        width: 30px;
+        padding: 0.9px 2px;
+    }
+    .game-title,#parentScores{
         font-size: 13px;
     }
+
     .game-scores{
          font-size: 13px;
     }
@@ -434,8 +576,6 @@ table#scoresTable{
     display: flex;
     justify-content: center;
 }
-
-.scoresTableContainer {}
 
 .scoresSpacer {
     height: 23px;
