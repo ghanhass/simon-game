@@ -60,14 +60,14 @@ var gameEventHandlers = {
         //console.log('cell: ', event.target);
     },
     animationStartHandler: function(event){
-        console.log("animationStartHandler ", event);
+        //console.log("animationStartHandler ", event);
         switch(event.animationName){
             case "rotatesimonhide": //whatever
             break;    
         }
     },
     animationEndHandler: function(event){
-        console.log("animationEndHandler ", event);
+        //console.log("animationEndHandler ", event);
         switch(event.animationName){
             case "rotatesimonhide": document.body.classList.remove("animateShowScores");
             break;   
@@ -92,7 +92,7 @@ var gameEventHandlers = {
         document.body.classList.remove("animateShowGame");
     },*/
     getScoresAjaxResponse: function(event){
-        console.log('getScoresAjaxResponse: ', this);
+        //console.log('getScoresAjaxResponse: ', this);
         let items = JSON.parse(this.responseText).items;
         gameData.topScore = parseInt(items[0].score);
         gameData.topPlayers = items;
@@ -243,7 +243,7 @@ function gameNextStage(){
     gameData.gameDOMCells.forEach(element => {
         element.classList.add("disabled");
     });
-    console.log("gameNextStage !")
+    //console.log("gameNextStage !")
     gameTitleMessages([{text: "Good job!", fontWeight: 'bold', delay: 500, callback: ()=>{
         gameData.gameButtons.playBtn.disabled = false; //enable play button
         gameData.gameButtons.viewScoresBtn.disabled = false;
@@ -259,7 +259,7 @@ function gameOver(){
             gameData.gameButtons.playBtn.removeEventListener("click", gameEventHandlers.gameCellClickEventHandler);
             gameData.gameDOMCells.forEach(element => {
                 element.classList.add("disabled");
-                console.log("gameOver !");
+                //console.log("gameOver !");
                 gameData.gameAICells = [];
             });
         }},
@@ -320,7 +320,20 @@ function scoresBoard(canInput = true){
     gameData.gameDiv.classList.remove("isShown");
     gameData.gameScoresDiv.classList.add("isShown");
     gameData.gameScoresDiv.classList.remove("isHidden");
-    gameData.usernameInput.parentNode.style.display = canInput === false? 'none' : '';
+    gameData.gameScoresDiv.querySelector(".formContainer").style.display = (canInput === false)? 'none' : '';
+    let scoresTableContainer = gameData.gameScoresDiv.querySelector(".scoresTableContainer");
+    console.log("scoresTableContainer.scrollHeight = ", scoresTableContainer.scrollHeight);
+    console.log("scoresTableContainer.clientHeight = ", scoresTableContainer.clientHeight);
+    if(scoresTableContainer.scrollHeight > scoresTableContainer.clientHeight){
+        scoresTableContainer.style.boxShadow = '0 0 2px 1px #000000';
+        scoresTableContainer.style.padding = '';
+        scoresTableContainer.querySelector("#scoresTable").style.boxShadow = '';
+    }
+    else{
+        scoresTableContainer.style.boxShadow = '';
+        scoresTableContainer.style.padding = '3px';
+        scoresTableContainer.querySelector("#scoresTable").style.boxShadow = '0 0 2px 1px #000000';
+    }
 }
 
 function GameBoard(){
