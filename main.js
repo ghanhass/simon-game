@@ -16,7 +16,6 @@ var gameData = {
 
     score: 0,
     topScore: 0,
-    topPlayers: [],
     gameDOMScore: undefined,
     gameDOMTopScore: undefined,
 
@@ -91,20 +90,17 @@ var gameEventHandlers = {
         console.log('inside  showGameAnimationEndEventHandler!');
         document.body.classList.remove("animateShowGame");
     },*/
-    getScoresAjaxResponse: function(event){
-        console.log('getScoresAjaxResponse: ', this);
+    getScoresAjaxResponseHandler: function(event){
+        //console.log("get scores = ", this);
         let items = JSON.parse(this.responseText).items;
-        gameData.topScore = parseInt(items[0].score);
-        gameData.topPlayers = items;
-        gameData.gameDOMTopScore.textContent = items[0].score;
-        document.querySelector(".scoresLoaded").style.display = "";
-        document.querySelector(".scoresLoading").style.display = "none";
-        fillScoresTable();
-
-        gameData.gameXHR.removeEventListener("load", gameEventHandlers.getScoresAjaxResponse);
-    },
-    viewScoresEventHandler: function(event){
-        scoresBoard(false);
+        console.log("items = ", items);
+        if(items.length){
+            let topScore = items[0].score;
+            gameData.gameDOMTopScore.textContent = topScore;
+            gameData.topScore= parseInt(topScore);
+            gameData.gameDOMTopScore.parentNode.parentNode.style.display = 'block';
+            gameData.gameDOMTopScore.parentNode.parentNode.previousElementSibling.style.display = 'none';
+        }
     }
 }
 
@@ -115,28 +111,26 @@ function setScore(score){
         setTopScore(score)
     }
 }
+function getTopScore(){
 
-function fillScoresTable(){
-    let tbody = document.querySelector("#scoresTable > tbody");
-    tbody.innerHTML = "";
-    gameData.topPlayers.forEach((player, index)=>{
-        tbody.innerHTML += "<tr><td>" + player.name + "</td><td>" + player.score + "</td></tr>";
-    })
+    if(topScore){
+        //return parseInt(topScore);
+        gameData.topScore = topScore;
+    }
+    localStorage.setItem("hassenSimontopScore", 0);
+    //return 0;
 }
 
 function setTopScore(score = undefined){
 
-    if(score){ //set new game topscore ingame ?
-        gameData.topScore = score ? score : gameData.topScore;
-    }
-    else{ //initiate game topscore from server ?
-        gameData.gameXHR.open("GET", "https://5ced4e76b779120014b4a06a.mockapi.io/api/v1/simon_scores?sortBy=score&order=desc");
-        gameData.gameXHR.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-        gameData.gameXHR.send();
-        gameData.gameXHR.addEventListener("load", gameEventHandlers.getScoresAjaxResponse)
-    }
-    
+    //let topScore = localStorage.getItem("hassenSimontopScore");
+    let xhr = new XMLHttpRequest();
+    xhr.addEventListener("load", gameEventHandlers.getScoresAjaxResponseHandler);
+    xhr.open("GET", "https://5ced4e76b779120014b4a06a.mockapi.io/api/v1/simon_scores?sortBy=score&order=desc");
+    xhr.setRequestHeader("content-Type", "application/x-www-form-urlencoded");
+    xhr.send();
 
+/*
     let storedTopScore = localStorage.getItem("hassenSimontopScore");// to be restorable from DB in the future
     if(score){
         localStorage.setItem("hassenSimontopScore", score);
@@ -153,6 +147,7 @@ function setTopScore(score = undefined){
             gameData.gameDOMTopScore.textContent = 0;
         }
     }
+    */
 }
 
 /** Change game title text configurationally

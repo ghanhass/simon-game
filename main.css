@@ -603,3 +603,10 @@ table#scoresTable{
     flex-grow: 2;
     width: 100%;
 }
+
+.scoresContainer{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
