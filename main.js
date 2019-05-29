@@ -1,21 +1,26 @@
 var gameData = {
+    gameXHR: new XMLHttpRequest(),
     gameAICells: [],
     gameDOMCells: [],
     gameRemainingCellsCount: 0,
     gameMediaElements: [],
     gameStage: 0,
 
-    playBtn: undefined,
+    gameButtons:{
+        playBtn: undefined,
+        exitScoresBoardBtn: undefined,
+        submitUsernameInputBtn: undefined
+    },
 
     score: 0,
-    topScore: getTopScore(),
+    topScore: 0,
+    topPlayers: [],
     gameDOMScore: undefined,
     gameDOMTopScore: undefined,
 
     gameDOMTitle: undefined,
     gameDiv: undefined,
     gameScoresDiv: undefined,
-    exitScoresBoardBtn: undefined
 }
 
 var miscellaneous
@@ -84,6 +89,18 @@ var gameEventHandlers = {
         console.log('inside  showGameAnimationEndEventHandler!');
         document.body.classList.remove("animateShowGame");
     },*/
+    getScoresAjaxResponse: function(event){
+        console.log('getScoresAjaxResponse: ', this);
+        let items = JSON.parse(this.responseText).items;
+        gameData.topScore = parseInt(items[0].score);
+        gameData.topPlayers = items;
+        gameData.gameDOMTopScore.textContent = items[0].score;
+        document.querySelector(".scoresLoaded").style.display = "";
+        document.querySelector(".scoresLoading").style.display = "none";
+        fillScoresTable();
+
+        gameData.gameXHR.removeEventListener("load", gameEventHandlers.getScoresAjaxResponse);
+    }
 }
 
 function setScore(score){
@@ -93,15 +110,28 @@ function setScore(score){
         setTopScore(score)
     }
 }
-function getTopScore(){
-    let topScore = localStorage.getItem("hassenSimontopScore");
-    if(topScore){
-        return parseInt(topScore);
-    }
-    localStorage.setItem("hassenSimontopScore", 0);
-    return 0;
+
+function fillScoresTable(){
+    let tbody = document.querySelector("#scoresTable > tbody");
+    tbody.innerHTML = "";
+    gameData.topPlayers.forEach((player, index)=>{
+        tbody.innerHTML += "<tr><td>" + player.name + "</td><td>" + player.score + "</td></tr>";
+    })
 }
+
 function setTopScore(score = undefined){
+
+    if(score){ //set new game topscore ingame ?
+        gameData.topScore = score ? score : gameData.topScore;
+    }
+    else{ //initiate game topscore from server ?
+        gameData.gameXHR.open("GET", "https://5ced4e76b779120014b4a06a.mockapi.io/api/v1/simon_scores?sortBy=score&order=desc");
+        gameData.gameXHR.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+        gameData.gameXHR.send();
+        gameData.gameXHR.addEventListener("load", gameEventHandlers.getScoresAjaxResponse)
+    }
+    
+
     let storedTopScore = localStorage.getItem("hassenSimontopScore");// to be restorable from DB in the future
     if(score){
         localStorage.setItem("hassenSimontopScore", score);
@@ -158,7 +188,8 @@ function ready(gameDOMCells){
     gameDOMCells.forEach(element => {
         element.classList.add("disabled");
     });
-    gameData.playBtn.disabled = true;
+    gameData.gameButtons.playBtn.disabled = true;
+    gameData.gameButtons.viewScoresBtn.disabled = true;
     gameTitleMessages([
         {text:'Ready', fontWeight: 'bold', delay:1000},
         {text:'Go', fontWeight: 'bold', delay: 1000},
@@ -186,7 +217,8 @@ function gameAI(gameDOMCells, cellsArray){
         gameTitleMessages([
         {text:'Your turn!', fontWeight: 'bold',callback: ()=>{
             userGamePlay(gameDOMCells)
-            gameData.playBtn.disabled = true; //disable play button
+            gameData.gameButtons.playBtn.disabled = true; //disable play button
+            gameData.gameButtons.viewScoresBtn.disabled = true
         } , callbackParams: [gameDOMCells]},
         ]);
     }
@@ -202,13 +234,14 @@ function userGamePlay(gameDOMCells){
 }
 
 function gameNextStage(){
-    gameData.playBtn.removeEventListener("click", gameEventHandlers.gameCellClickEventHandler);
+    gameData.gameButtons.playBtn.removeEventListener("click", gameEventHandlers.gameCellClickEventHandler);
     gameData.gameDOMCells.forEach(element => {
         element.classList.add("disabled");
     });
     console.log("gameNextStage !")
     gameTitleMessages([{text: "Good job!", fontWeight: 'bold', delay: 500, callback: ()=>{
-        gameData.playBtn.disabled = false; //enable play button
+        gameData.gameButtons.playBtn.disabled = false; //enable play button
+        gameData.gameButtons.viewScoresBtn.disabled = false;
     }
     }])
 }
@@ -216,8 +249,9 @@ function gameNextStage(){
 function gameOver(){
     playAudio(5);
     gameTitleMessages([{text: "Game Over!", fontWeight: "bold", delay: 700, callback: ()=>{
-            gameData.playBtn.disabled = false; //enable play button
-            gameData.playBtn.removeEventListener("click", gameEventHandlers.gameCellClickEventHandler);
+            gameData.gameButtons.playBtn.disabled = false; //enable play button
+            gameData.gameButtons.viewScoresBtn.disabled = false;
+            gameData.gameButtons.playBtn.removeEventListener("click", gameEventHandlers.gameCellClickEventHandler);
             gameData.gameDOMCells.forEach(element => {
                 element.classList.add("disabled");
                 console.log("gameOver !");
@@ -252,20 +286,22 @@ function initGame(){
     gameData.gameDOMCells.push(document.querySelector(".cell[data-cell-id='3']"));
     gameData.gameDOMCells.push(document.querySelector(".cell[data-cell-id='4']"));
     
-    gameData.playBtn = document.querySelector(".gameBtn.playBtn");
-    gameData.playBtn.addEventListener("click", gameEventHandlers.playBtnEventHandler);
+    gameData.gameButtons.playBtn = document.querySelector(".gameBtn#playBtn");
+    gameData.gameButtons.playBtn.addEventListener("click", gameEventHandlers.playBtnEventHandler);
+
+    gameData.gameButtons.exitScoresBoardBtn = document.querySelector("#exitScoresBoardBtn");
 
     gameData.gameDOMScore = document.querySelector("#score");
     gameData.gameDOMTopScore = document.querySelector("#top-score");
     gameData.gameDOMTitle = document.querySelector(".game-title");
     gameData.gameDiv = document.querySelector(".outerGameDiv");
     gameData.gameScoresDiv = document.querySelector(".outerScoresDiv");
-    gameData.exitScoresBoardBtn = document.querySelector("#exitScoresBoard");
+    gameData.gameButtons.viewScoresBtn = document.querySelector("#viewScoresBtn");
 
     gameData.gameDiv.addEventListener("animationstart", gameEventHandlers.animationStartHandler);
     gameData.gameDiv.addEventListener("animationend", gameEventHandlers.animationEndHandler);
 
-    gameData.exitScoresBoardBtn.addEventListener("click", gameEventHandlers.exitScoresBoardBtnEventHandler);
+    gameData.gameButtons.exitScoresBoardBtn.addEventListener("click", gameEventHandlers.exitScoresBoardBtnEventHandler);
     setScore(0);
     setTopScore();
 }
@@ -288,9 +324,5 @@ function GameBoard(){
 ///////////////////////////
 
 document.addEventListener("DOMContentLoaded", function(){
-    
     initGame();
-    
-    //var pauseBtn = document.querySelector(".gameBtn.pauseBtn");
-    //var restartBtn = document.querySelector(".gameBtn.restartBtn");
 });
