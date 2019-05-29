@@ -12,6 +12,8 @@ var gameData = {
         submitUsernameInputBtn: undefined
     },
 
+    usernameInput: undefined,
+
     score: 0,
     topScore: 0,
     topPlayers: [],
@@ -100,6 +102,9 @@ var gameEventHandlers = {
         fillScoresTable();
 
         gameData.gameXHR.removeEventListener("load", gameEventHandlers.getScoresAjaxResponse);
+    },
+    viewScoresEventHandler: function(event){
+        scoresBoard(false);
     }
 }
 
@@ -287,7 +292,6 @@ function initGame(){
     gameData.gameDOMCells.push(document.querySelector(".cell[data-cell-id='4']"));
     
     gameData.gameButtons.playBtn = document.querySelector(".gameBtn#playBtn");
-    gameData.gameButtons.playBtn.addEventListener("click", gameEventHandlers.playBtnEventHandler);
 
     gameData.gameButtons.exitScoresBoardBtn = document.querySelector("#exitScoresBoardBtn");
 
@@ -298,20 +302,25 @@ function initGame(){
     gameData.gameScoresDiv = document.querySelector(".outerScoresDiv");
     gameData.gameButtons.viewScoresBtn = document.querySelector("#viewScoresBtn");
 
+    gameData.usernameInput = document.querySelector("#usernameInput");
+
+    gameData.gameButtons.playBtn.addEventListener("click", gameEventHandlers.playBtnEventHandler);
     gameData.gameDiv.addEventListener("animationstart", gameEventHandlers.animationStartHandler);
     gameData.gameDiv.addEventListener("animationend", gameEventHandlers.animationEndHandler);
-
+    gameData.gameButtons.viewScoresBtn.addEventListener("click", gameEventHandlers.viewScoresEventHandler);
     gameData.gameButtons.exitScoresBoardBtn.addEventListener("click", gameEventHandlers.exitScoresBoardBtnEventHandler);
+
     setScore(0);
     setTopScore();
 }
 
-function scoresBoard(){
+function scoresBoard(canInput = true){
     document.body.classList.add("animateShowScores");
     gameData.gameDiv.classList.add("isHidden");
     gameData.gameDiv.classList.remove("isShown");
     gameData.gameScoresDiv.classList.add("isShown");
     gameData.gameScoresDiv.classList.remove("isHidden");
+    gameData.usernameInput.parentNode.style.display = canInput === false? 'none' : '';
 }
 
 function GameBoard(){
