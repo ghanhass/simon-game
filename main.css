@@ -554,6 +554,7 @@ body.animateShowGame .outerScoresDiv{
 table#scoresTable{
     border-collapse: collapse;
     width: 100%;
+    box-shadow: 0 0 2px 0 #000000;
 }
 #scoresTable tr > *
  {
@@ -581,8 +582,9 @@ table#scoresTable{
     justify-content: center;
     height: 217px;
     overflow-y: auto;
-    box-shadow: 0 0 5px 0 #000000;
+    /* box-shadow: 0 0 5px 0 #000000; */
     width: 66%;
+    padding: 3px;
 }
 
 .scoresBoardFooter{
