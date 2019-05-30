@@ -51,28 +51,28 @@ audio{
 body.animateShowScores .outerGameDiv{
     animation-name: rotatesimonhide;
     animation-iteration-count: 1;
-    animation-duration: 2s;
+    animation-duration: 1s;
     animation-timing-function: linear;
 }
 
 body.animateShowScores .outerScoresDiv{
     animation-name: rotatesimonscoresshow;
     animation-iteration-count: 1;
-    animation-duration: 2s;
+    animation-duration: 1s;
     animation-timing-function: linear;
 }
 
 body.animateShowGame .outerGameDiv{
     animation-name: rotatesimonshow;
     animation-iteration-count: 1;
-    animation-duration: 2s;
+    animation-duration: 1s;
     animation-timing-function: linear;
 }
 
 body.animateShowGame .outerScoresDiv{
     animation-name: rotatesimonscoreshide;
     animation-iteration-count: 1;
-    animation-duration: 2s;
+    animation-duration: 1s;
     animation-timing-function: linear;
 }
 
@@ -90,7 +90,10 @@ body.animateShowGame .outerScoresDiv{
     align-items: center;
     justify-content: space-evenly;
     border: 5px solid #000000;
+    box-shadow: 0 0 6px 2px #FFFFFF;
 }
+
+div#parentGame {}
 #parentScores{
     background: #FFFFFF;
     display: flex;

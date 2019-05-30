@@ -92,19 +92,73 @@ var gameEventHandlers = {
         document.body.classList.remove("animateShowGame");
     },*/
     getScoresAjaxResponse: function(event){
+        gameData.gameXHR.removeEventListener("load", gameEventHandlers.getScoresAjaxResponse);
+
         //console.log('getScoresAjaxResponse: ', this);
         let items = JSON.parse(this.responseText).items;
-        gameData.topScore = parseInt(items[0].score);
         gameData.topPlayers = items;
-        gameData.gameDOMTopScore.textContent = items[0].score;
+        if(gameData.topPlayers.length){
+            gameData.topScore = parseInt(items[0].score);
+            gameData.gameDOMTopScore.textContent = items[0].score;
+        }
+        else{
+            gameData.topScore = 0;
+            gameData.gameDOMTopScore.textContent = 0;            
+        }
+
         document.querySelector(".scoresLoaded").style.display = "";
         document.querySelector(".scoresLoading").style.display = "none";
+        gameData.gameButtons.viewScoresBtn.disabled = false;
         fillScoresTable();
+        
+    },
+    savePlayerAjaxResponse: function(event){
+        gameData.gameXHR.removeEventListener("load", gameEventHandlers.savePlayerAjaxResponse);
+        gameData.gameScoresDiv.querySelector(".formContainer").style.display = 'none';
 
-        gameData.gameXHR.removeEventListener("load", gameEventHandlers.getScoresAjaxResponse);
+        gameData.gameXHR.open("GET", "https://5ced4e76b779120014b4a06a.mockapi.io/api/v1/simon_scores?sortBy=score&order=desc");
+        gameData.gameXHR.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+        gameData.gameXHR.addEventListener("load", gameEventHandlers.getScoresAjaxResponse);
+        gameData.gameXHR.send();
+    },
+    deletePlayerAjaxResponse: function(event){
+        gameData.gameXHR.removeEventListener("load", gameEventHandlers.deletePlayerAjaxResponse);
+
+        let requestString = "name="+encodeURIComponent(gameData.usernameInput.value)+"&score="+encodeURIComponent(gameData.score);
+        console.log("requestString = ", requestString);
+        gameData.gameXHR.open("POST", "https://5ced4e76b779120014b4a06a.mockapi.io/api/v1/simon_scores");
+        gameData.gameXHR.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+        gameData.gameXHR.addEventListener("load", gameEventHandlers.savePlayerAjaxResponse);
+        gameData.gameXHR.send(requestString);
     },
     viewScoresEventHandler: function(event){
         scoresBoard(false);
+    },
+    submitUsernameInputEventHandler: function(event){
+        let payerName = gameData.usernameInput.value;
+        let doomedId = undefined;
+        if (gameData.topPlayers.length == 100){//players list count limit reached ? replace a player
+            for(let index = 0; index <= 99; index++){
+                if(gameData.score >= parseInt(gameData.topPlayers[index].score)){
+                    doomedId = gameData.topPlayers[index].id;
+                    break;
+                }
+            }
+            if(doomedId !== undefined){
+                gameData.gameXHR.open("DELETE", "https://5ced4e76b779120014b4a06a.mockapi.io/api/v1/simon_scores/"+doomedId);
+                gameData.gameXHR.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+                gameData.gameXHR.addEventListener("load", gameEventHandlers.deletePlayerAjaxResponse);
+                gameData.gameXHR.send();
+            }
+        }
+        else{
+            let requestString = "name="+encodeURIComponent(payerName)+"&score="+encodeURIComponent(gameData.score);
+            console.log("requestString = ", requestString);
+            gameData.gameXHR.open("POST", "https://5ced4e76b779120014b4a06a.mockapi.io/api/v1/simon_scores");
+            gameData.gameXHR.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+            gameData.gameXHR.addEventListener("load", gameEventHandlers.savePlayerAjaxResponse);
+            gameData.gameXHR.send(requestString);
+        }
     }
 }
 
@@ -120,24 +174,25 @@ function fillScoresTable(){
     let tbody = document.querySelector("#scoresTable > tbody");
     tbody.innerHTML = "";
     gameData.topPlayers.forEach((player, index)=>{
-        tbody.innerHTML += "<tr><td>" + player.name + "</td><td>" + player.score + "</td></tr>";
+        tbody.innerHTML += "<tr data-player-id='" + player.id + "'><td>" + player.name + "</td><td>" + player.score + "</td></tr>";
     })
 }
 
 function setTopScore(score = undefined){
 
     if(score){ //set new game topscore ingame ?
-        gameData.topScore = score ? score : gameData.topScore;
+        gameData.topScore = score;
+        gameData.gameDOMTopScore.textContent = score;
     }
     else{ //initiate game topscore from server ?
         gameData.gameXHR.open("GET", "https://5ced4e76b779120014b4a06a.mockapi.io/api/v1/simon_scores?sortBy=score&order=desc");
         gameData.gameXHR.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
         gameData.gameXHR.send();
-        gameData.gameXHR.addEventListener("load", gameEventHandlers.getScoresAjaxResponse)
+        gameData.gameXHR.addEventListener("load", gameEventHandlers.getScoresAjaxResponse);
     }
     
 
-    let storedTopScore = localStorage.getItem("hassenSimontopScore");// to be restorable from DB in the future
+    /*let storedTopScore = localStorage.getItem("hassenSimontopScore");// to be restorable from DB in the future
     if(score){
         localStorage.setItem("hassenSimontopScore", score);
         gameData.gameDOMTopScore.textContent = score;
@@ -152,7 +207,7 @@ function setTopScore(score = undefined){
             localStorage.setItem("hassenSimontopScore", 0);
             gameData.gameDOMTopScore.textContent = 0;
         }
-    }
+    }*/
 }
 
 /** Change game title text configurationally
@@ -172,10 +227,13 @@ function gameTitleMessages(messagesArray){
                 messagesArray[0].callback();
             }
         }
-        if(messagesArray[0].delay){
+        if(messagesArray[0].delay){ //delayed function call
             var messagesTimer = window.setTimeout(()=>{
                 gameTitleMessages(messagesArray.slice(1));
             }, messagesArray[0].delay);
+        }
+        else{ //instant function call
+            gameTitleMessages(messagesArray.slice(1));
         }
     }
 }
@@ -210,7 +268,7 @@ function ready(gameDOMCells){
 function gameAI(gameDOMCells, cellsArray){
     if(cellsArray.length){
         gameDOMCells[cellsArray[0] - 1].classList.add("active")
-        playAudio(cellsArray[0])
+        playAudio(cellsArray[0]);
         let cellActiveTimer = window.setTimeout(()=>{
             gameDOMCells[cellsArray[0] - 1].classList.remove("active");
             let nextRecursionTimer = window.setTimeout(()=>{
@@ -253,7 +311,7 @@ function gameNextStage(){
 
 function gameOver(){
     playAudio(5);
-    gameTitleMessages([{text: "Game Over!", fontWeight: "bold", delay: 700, callback: ()=>{
+    gameTitleMessages([{text: "Game Over!", fontWeight: "bold", delay: 900, callback: ()=>{
             gameData.gameButtons.playBtn.disabled = false; //enable play button
             gameData.gameButtons.viewScoresBtn.disabled = false;
             gameData.gameButtons.playBtn.removeEventListener("click", gameEventHandlers.gameCellClickEventHandler);
@@ -263,8 +321,18 @@ function gameOver(){
                 gameData.gameAICells = [];
             });
         }},
-        {text: gameData.gameDOMTitle.textContent, fontWeight: "", delay: 2000, callback: ()=>{
-            scoresBoard();
+        {text: "Simon", fontWeight: "", delay: 2000, callback: ()=>{
+            if(gameData.topPlayers.length){
+                if(gameData.score > gameData.topPlayers[gameData.topPlayers.length - 1].score){//score > min score of top players ?
+                    scoresBoard();
+                }
+                else{
+                    scoresBoard(false);
+                }
+            }
+            else{
+                scoresBoard();//new score
+            }
         }
         }
     ]);
@@ -292,29 +360,35 @@ function initGame(){
     gameData.gameDOMCells.push(document.querySelector(".cell[data-cell-id='4']"));
     
     gameData.gameButtons.playBtn = document.querySelector(".gameBtn#playBtn");
+    gameData.gameButtons.playBtn.addEventListener("click", gameEventHandlers.playBtnEventHandler);
+
+    gameData.gameButtons.viewScoresBtn = document.querySelector("#viewScoresBtn");
+    gameData.gameButtons.viewScoresBtn.addEventListener("click", gameEventHandlers.viewScoresEventHandler);
 
     gameData.gameButtons.exitScoresBoardBtn = document.querySelector("#exitScoresBoardBtn");
+    gameData.gameButtons.exitScoresBoardBtn.addEventListener("click", gameEventHandlers.exitScoresBoardBtnEventHandler);
+
+    gameData.gameButtons.submitUsernameInputBtn = document.querySelector("#submitUsernameInputBtn");
+    gameData.gameButtons.submitUsernameInputBtn.addEventListener("click", gameEventHandlers.submitUsernameInputEventHandler);
 
     gameData.gameDOMScore = document.querySelector("#score");
     gameData.gameDOMTopScore = document.querySelector("#top-score");
     gameData.gameDOMTitle = document.querySelector(".game-title");
+
     gameData.gameDiv = document.querySelector(".outerGameDiv");
-    gameData.gameScoresDiv = document.querySelector(".outerScoresDiv");
-    gameData.gameButtons.viewScoresBtn = document.querySelector("#viewScoresBtn");
-
-    gameData.usernameInput = document.querySelector("#usernameInput");
-
-    gameData.gameButtons.playBtn.addEventListener("click", gameEventHandlers.playBtnEventHandler);
     gameData.gameDiv.addEventListener("animationstart", gameEventHandlers.animationStartHandler);
     gameData.gameDiv.addEventListener("animationend", gameEventHandlers.animationEndHandler);
-    gameData.gameButtons.viewScoresBtn.addEventListener("click", gameEventHandlers.viewScoresEventHandler);
-    gameData.gameButtons.exitScoresBoardBtn.addEventListener("click", gameEventHandlers.exitScoresBoardBtnEventHandler);
+
+    gameData.gameScoresDiv = document.querySelector(".outerScoresDiv");
+    gameData.usernameInput = document.querySelector("#usernameInput");
 
     setScore(0);
     setTopScore();
 }
 
 function scoresBoard(canInput = true){
+    gameData.gameButtons.playBtn.disabled = true;
+    gameData.gameButtons.viewScoresBtn.disabled = true;
     document.body.classList.add("animateShowScores");
     gameData.gameDiv.classList.add("isHidden");
     gameData.gameDiv.classList.remove("isShown");
@@ -324,7 +398,8 @@ function scoresBoard(canInput = true){
     let scoresTableContainer = gameData.gameScoresDiv.querySelector(".scoresTableContainer");
     console.log("scoresTableContainer.scrollHeight = ", scoresTableContainer.scrollHeight);
     console.log("scoresTableContainer.clientHeight = ", scoresTableContainer.clientHeight);
-    if(scoresTableContainer.scrollHeight > scoresTableContainer.clientHeight){
+
+    if(scoresTableContainer.scrollHeight > scoresTableContainer.clientHeight){ //dynamic box-shadow style adaptation
         scoresTableContainer.style.boxShadow = '0 0 2px 1px #000000';
         scoresTableContainer.style.padding = '';
         scoresTableContainer.querySelector("#scoresTable").style.boxShadow = '';
@@ -337,6 +412,8 @@ function scoresBoard(canInput = true){
 }
 
 function GameBoard(){
+    gameData.gameButtons.playBtn.disabled = false;
+    gameData.gameButtons.viewScoresBtn.disabled = false;
     document.body.classList.add("animateShowGame");
     gameData.gameDiv.classList.add("isShown");
     gameData.gameDiv.classList.remove("isHidden");
