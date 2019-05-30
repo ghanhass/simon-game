@@ -97,6 +97,11 @@ var gameEventHandlers = {
         //console.log('getScoresAjaxResponse: ', this);
         let items = JSON.parse(this.responseText).items;
         gameData.topPlayers = items;
+
+        gameData.topPlayers.sort(function(a, b) {//sort desc
+            return -(a.score - b.score);
+        });
+
         if(gameData.topPlayers.length){
             gameData.topScore = parseInt(items[0].score);
             gameData.gameDOMTopScore.textContent = items[0].score;
