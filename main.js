@@ -53,9 +53,9 @@ var gameEventHandlers = {
             if(gameData.gameRemainingCellsCount >= gameData.gameAICells.length ){//stage complete
 
                 gameData.mem++;
-                gameData.gameDOMScore.textContent = mem;
+                gameData.gameDOMScore.textContent = gameData.mem;
                 if(gameData.topScore < gameData.mem){
-                    setTopScore(mem)
+                    setTopScore(gameData.mem)
                 }
                 gameNextStage();
             }
