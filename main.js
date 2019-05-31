@@ -81,21 +81,6 @@ var gameEventHandlers = {
             break; 
         }
     },
-    /*
-    showScoresAnimationStartEventHandler: function(event){
-        console.log('inside  showScoresAnimationStartEventHandler!');
-    },
-    showScoresAnimationEndEventHandler: function(event){
-        console.log('inside  showScoresAnimationEndEventHandler!');
-        document.body.classList.remove("animateShowScores");
-    },
-    showGameAnimationStartEventHandler: function(event){
-        console.log('inside  showGameAnimationStartEventHandler!');
-    },
-    showGameAnimationEndEventHandler: function(event){
-        console.log('inside  showGameAnimationEndEventHandler!');
-        document.body.classList.remove("animateShowGame");
-    },*/
     getScoresAjaxResponse: function(event){
         gameData.gameXHR.removeEventListener("load", gameEventHandlers.getScoresAjaxResponse);
 
@@ -276,7 +261,7 @@ function gameAI(gameDOMCells, cellsArray){
             gameDOMCells[cellsArray[0] - 1].classList.remove("active");
             let nextRecursionTimer = window.setTimeout(()=>{
                 gameAI(gameDOMCells, cellsArray.slice(1));
-            }, 400);
+            }, 200);
         }, 350);
     }
     else{
@@ -304,19 +289,22 @@ function gameNextStage(){
     gameData.gameDOMCells.forEach(element => {
         element.classList.add("disabled");
     });
-    //console.log("gameNextStage !")
-    gameTitleMessages([{text: "Good job!", fontWeight: 'bold', delay: 500, callback: ()=>{
-        gameData.gameButtons.playBtn.disabled = false; //enable play button
-        gameData.gameButtons.viewScoresBtn.disabled = false;
+    console.log("gameNextStage !")
+    gameTitleMessages([{text: "Good job!", fontWeight: 'bold', delay: 1200},
+    {callback: ()=>{
+        //gameData.gameButtons.playBtn.disabled = false; //enable play button
+        //gameData.gameButtons.viewScoresBtn.disabled = false;
+        ready(gameData.gameDOMCells);
     }
-    }])
+    }
+    ]);
 }
 
 function gameOver(){
     playAudio(5);
     gameTitleMessages([{text: "Game Over!", fontWeight: "bold", delay: 900, callback: ()=>{
-            gameData.gameButtons.playBtn.disabled = false; //enable play button
-            gameData.gameButtons.viewScoresBtn.disabled = false;
+            //gameData.gameButtons.playBtn.disabled = false; //enable play button
+            //gameData.gameButtons.viewScoresBtn.disabled = false;
             gameData.gameButtons.playBtn.removeEventListener("click", gameEventHandlers.gameCellClickEventHandler);
             gameData.gameDOMCells.forEach(element => {
                 element.classList.add("disabled");
