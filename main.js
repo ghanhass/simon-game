@@ -51,7 +51,12 @@ var gameEventHandlers = {
         else{
             playAudio(cellId);
             if(gameData.gameRemainingCellsCount >= gameData.gameAICells.length ){//stage complete
-                setScore(gameData.score + 1);
+
+                gameData.mem++;
+                gameData.gameDOMScore.textContent = score;
+                if(gameData.topScore < gameData.mem){
+                    setTopScore(score)
+                }
                 gameNextStage();
             }
         }
@@ -99,12 +104,12 @@ var gameEventHandlers = {
         gameData.topPlayers = items;
 
         gameData.topPlayers.sort(function(a, b) {//sort desc
-            return -(a.score - b.score);
+            return -(a.mem - b.mem);
         });
 
         if(gameData.topPlayers.length){
-            gameData.topScore = parseInt(items[0].score);
-            gameData.gameDOMTopScore.textContent = items[0].score;
+            gameData.topScore = parseInt(items[0].mem);
+            gameData.gameDOMTopScore.textContent = items[0].mem;
         }
         else{
             gameData.topScore = 0;
@@ -129,7 +134,7 @@ var gameEventHandlers = {
     deletePlayerAjaxResponse: function(event){
         gameData.gameXHR.removeEventListener("load", gameEventHandlers.deletePlayerAjaxResponse);
 
-        let requestString = "name="+encodeURIComponent(gameData.usernameInput.value)+"&score="+encodeURIComponent(gameData.score);
+        let requestString = "name="+encodeURIComponent(gameData.usernameInput.value)+"&score="+encodeURIComponent(gameData.mem);
         console.log("requestString = ", requestString);
         gameData.gameXHR.open("POST", "https://5ced4e76b779120014b4a06a.mockapi.io/api/v1/simon_scores");
         gameData.gameXHR.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
@@ -144,7 +149,7 @@ var gameEventHandlers = {
         let doomedId = undefined;
         if (gameData.topPlayers.length == 100){//players list count limit reached ? replace a player
             for(let index = 0; index <= 99; index++){
-                if(gameData.score >= parseInt(gameData.topPlayers[index].score)){
+                if(gameData.mem >= parseInt(gameData.topPlayers[index].mem)){
                     doomedId = gameData.topPlayers[index].id;
                     break;
                 }
@@ -157,7 +162,7 @@ var gameEventHandlers = {
             }
         }
         else{
-            let requestString = "name="+encodeURIComponent(payerName)+"&score="+encodeURIComponent(gameData.score);
+            let requestString = "name="+encodeURIComponent(payerName)+"&score="+encodeURIComponent(gameData.mem);
             console.log("requestString = ", requestString);
             gameData.gameXHR.open("POST", "https://5ced4e76b779120014b4a06a.mockapi.io/api/v1/simon_scores");
             gameData.gameXHR.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
@@ -167,19 +172,12 @@ var gameEventHandlers = {
     }
 }
 
-function setScore(score){
-    gameData.score = score;
-    gameData.gameDOMScore.textContent = score;
-    if(gameData.topScore < gameData.score){
-        setTopScore(score)
-    }
-}
 
 function fillScoresTable(){
     let tbody = document.querySelector("#scoresTable > tbody");
     tbody.innerHTML = "";
     gameData.topPlayers.forEach((player, index)=>{
-        tbody.innerHTML += "<tr data-player-id='" + player.id + "'><td>" + player.name + "</td><td>" + player.score + "</td></tr>";
+        tbody.innerHTML += "<tr data-player-id='" + player.id + "'><td>" + player.name + "</td><td>" + player.mem + "</td></tr>";
     })
 }
 
@@ -249,7 +247,7 @@ function gameTitleMessages(messagesArray){
  */
 function ready(gameDOMCells){
     if(!gameData.gameAICells.length){//reset score after a gameover call
-        setScore(0);
+        gameData.mem = 0;
     }
     gameData.gameStage++;
     gameData.gameAICells.push(Math.floor(Math.random() * 4) + 1);
@@ -328,7 +326,7 @@ function gameOver(){
         }},
         {text: "Simon", fontWeight: "", delay: 2000, callback: ()=>{
             if(gameData.topPlayers.length){
-                if(gameData.score > gameData.topPlayers[gameData.topPlayers.length - 1].score){//score > min score of top players ?
+                if(gameData.mem > gameData.topPlayers[gameData.topPlayers.length - 1].mem){//score > min score of top players ?
                     scoresBoard();
                 }
                 else{
@@ -387,7 +385,6 @@ function initGame(){
     gameData.gameScoresDiv = document.querySelector(".outerScoresDiv");
     gameData.usernameInput = document.querySelector("#usernameInput");
 
-    setScore(0);
     setTopScore();
 }
 
